@@ -51,7 +51,16 @@ cesar_cypher = bidict({
 'Z': 25,
 })
 
+def decrypt(plainText):
+	cypher = list()
 
+	for character in plainText:
+		if (re.search(r"[A-Z]", character) is not None):
+			cypher.append((cesar_cypher[character] - 23) % 26)
+		else: 
+			cypher.append(character)
+
+	return cypher
 
 def encrypt(plainText):
 	cypher = list()
@@ -63,6 +72,17 @@ def encrypt(plainText):
 			cypher.append(character)
 
 	return cypher
+
+def print_decypher(cypher):
+	final_cypher = ''
+	for character in cypher:
+		if type(character) is int:		
+			final_cypher += cesar_cypher.inverse[character][0]
+		else: 
+			final_cypher += character
+	
+	print('This is your cesar_cypher:')
+	print(final_cypher)	
 
 def print_cypher(cypher):
 	final_cypher = ''
@@ -77,14 +97,32 @@ def print_cypher(cypher):
 	print(final_cypher)	
 
 
-def get_input():
-	print('Input your plain text: ')
+def get_text():
+	print('Input your text: ')
+	return input().upper()
+
+
+def get_mode():
+	print('Do you want to (E)ncrypt or (D)crypt?')
 	return input().upper()
 
 def main():
-	plainText = get_input()
-	cypher = encrypt(plainText)
-	print_cypher(cypher)
+	correct_input = False
+	
+	while not correct_input:
+		mode = get_mode()
+		if (mode == 'E'):
+			correct_input = True
+			text = get_text()
+			cypher = encrypt(text)
+			print_cypher(cypher)
+		elif (mode == 'D'):
+			correct_input = True
+			text = get_text()
+			plainText = decrypt(text)
+			print_decypher(plainText)
+		else:
+			print('Wrong input.')
 	
 
 if __name__ == "__main__":
